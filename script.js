@@ -10,9 +10,15 @@ var parentContainer = document.getElementById("parent-container");
 var days = "5";
 
 
+init();
+
+function init () {
+  showCity();
+};
+
 // Creating the 5-Day Forecast
 function makeContainer(day, temp, humidity, wind, uv) {
-  return `<div class="card" style="width: 18rem;">
+  return `<div class="card forecast mx-2" style="width: 18rem;">
   <ul class="list-group list-group-flush">
     <li class="list-group-item">Day: ${day}</li>
     <li class="list-group-item">Temperature: ${temp}</li>
@@ -31,6 +37,30 @@ function createDate(time) {
   return actualDate
 };
 
+function saveCity(data) {
+  event.preventDefault;
+  var storedResults = JSON.parse(localStorage.getItem('prevCity'));
+  if (storedResults === null) {
+    var selectedCity = [data]
+    localStorage.setItem('prevCity', JSON.stringify(selectedCity))
+    addResult(data);
+    return
+  };
+  storedResults.push(data)
+  localStorage.setItem('prevCity', JSON.stringify(storedResults));
+  addResult(data);
+};
+
+function showCity(data) {
+  var storedResults = JSON.parse(localStorage.getItem('prevCity'));
+  if (storedResults != undefined || storedResults != null) {
+    for (let i = 0; i < storedResults.length; i++) {
+      searchHistory.innerHTML += `<button class="btn btn-primary m-1 prevResult" id='prevBtn' type="submit" value="${storedResults[i]}">${storedResults[i]}</button>`
+    }
+  }
+  researchBtn();
+};
+
 // API Call for Current Weather (including lon & lat data)
 function getLocation() {
   var searchCity = cityName.value
@@ -41,13 +71,13 @@ function getLocation() {
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) return response.json();
-      else console.log(error);
+      else console.log(err);
     })
     .then(function (data) {
       getWeather(data.coord.lon, data.coord.lat)
     })
-    .catch(function (error) {
-      console.log(error)
+    .catch(function (err) {
+      console.log(err)
     });
   ;
 };
@@ -59,7 +89,7 @@ function getWeather(lon, lat) {
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) return response.json();
-      else console.log(error);
+      else console.log(err);
     })
     .then(function (data) {
       console.log(data)
@@ -71,16 +101,41 @@ function getWeather(lon, lat) {
       humidityEl.textContent = `Humidity: ${data.daily[0].humidity}`
       uviEl.textContent = `UV Index: ${data.daily[0].uvi}`
 
+      if (data.daily[0].uvi <= 2) {
+        uviEl.style.color = "green";
+      }
+      if (data.daily[0].uvi > 2 && data.daily[0].uvi <= 7) {
+        uviEl.style.color = "orange";
+      }
+      if (data.daily[0].uvi > 7) {
+        uviEl.style.color = "red";
+      }
+
       var html = "";
       for (let i = 1; i <= days; i++) {
         html += makeContainer(i, Math.floor(data.daily[i].temp.day), data.daily[i].humidity, data.daily[i].wind_speed, data.daily[i].uvi)
       }
       parentContainer.innerHTML = html;
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(function (err) {
+      console.log(err);
     });
   ;
 };
-  
-searchBtn.addEventListener('click', getLocation);
+
+searchBtn.addEventListener('click', function () {
+  var citySearch = cityName.value;
+  console.log(citySearch)
+  getLocation();
+  saveCity(citySearch);
+});
+
+function researchBtn() {
+  searchHistory.addEventListener('click', function (event) {
+    getLocation(event.target.value);
+  });
+};
+
+function addResult(city) {
+  searchHistory.innerHTML += `<button class="btn btn-primary m-1 prevResult" id='prevBtn' type="submit" value="${city}">${city}</button>`
+};

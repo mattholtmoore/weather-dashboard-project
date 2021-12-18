@@ -33,17 +33,17 @@ header {
   flex-wrap: wrap;
 }
 
-.card {
-  box-shadow: 0 3px 6px 0;
-  padding: 2%;
+#parent-container {
+  display: flex;
+  justify-content: center;
 }
 
-/* .btn {
-  border: none;
-  border-radius: 25px;
-  display: inline-block;
-  font-size: 22px;
-  text-align: center;
-  cursor: pointer;
-} */
+.card {
+  box-shadow: 0 3px 6px 0;
+}
+
+.forecast {
+  gap: 1.5rem;
+};
+
 

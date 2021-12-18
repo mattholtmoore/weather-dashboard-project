@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<!-- Fonts Link -->
+  <!-- Fonts Link -->
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
 
-<!-- FontsAwesome Link -->
+  <!-- FontsAwesome Link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 
-<!-- Bootstrap Link -->
+  <!-- Bootstrap Link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
 
-<!-- CSS Stylesheet -->
+  <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="./assets/css/style.css" />
 
   <!-- Added Moment.js -->
-  <script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js">
   </script>
 
   <!-- Attached jQuery -->
@@ -39,20 +38,19 @@
   <main class="container-fluid bg-light text-dark vh-100">
     <!-- Search Input and Search Button -->
     <section class="row align-items-center pb-3">
-      <section class="container pt-3  mb-5 cityInfo">
-        <div class="container cityInfo">
+      <section class="container pt-3 mb-5">
+        <div class="container">
           <div class="row align-items-start">
             <div class="col">
               <div class="input-group flex-nowrap col">
-                <input type="text" class="form-control" id="city-name"
-                  placeholder="Enter City Name" aria-label="Username"
-                  aria-describedby="addon-wrapping">
+                <input type="text" class="form-control" id="city-name" placeholder="Enter City Name"
+                  aria-label="Username" aria-describedby="addon-wrapping">
                 <input class="btn btn-primary" id="search-button" type="submit" value="Submit">
               </div>
               <div class="p-3" id="search-history"></div>
             </div>
             <div class="col">
-              <div class="card" style="width: 18rem;">
+              <div class="card" style="width: 35rem">
                 <div class="card-header" id="city">City:</div>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item bg-light" id="temperature">Temperature:</li>
@@ -66,11 +64,11 @@
         </div>
       </section>
 
-      <!-- Five Day Forecast -->
-      <div id="parent-container"></div>
-
     </section>
-    
+
+    <!-- Five Day Forecast -->
+    <div id="parent-container"></div>
+
   </main>
 
   <!-- Attached JavaScript file -->
