@@ -19,11 +19,11 @@ When the user views the UV index they're presented with a color that indicates w
 ## Links
 [Link to Weather Dashboard](https://mattholtmoore.github.io/weather-dashboard-project/)
 
-[Link to GitHub.com](https://github.com/mattholtmoore/weather-dashboard-project)  
+[Link to GitHub](https://github.com/mattholtmoore/weather-dashboard-project)  
 ***
 
 ## Visuals
-![weather-dashboard](*insert image* "weather-dashboard")
+![weather-dashboard](assets/images/weather-dashboard.png "weather-dashboard")
 
 
  
