@@ -1,3 +1,4 @@
+// Declared variables
 var searchBtn = document.getElementById('search-button');
 var cityName = document.getElementById('city-name');
 var cityEl = document.getElementById('city');
@@ -5,13 +6,13 @@ var temperatureEl = document.getElementById("temperature");
 var windSpeedEl = document.getElementById("wind-speed");
 var humidityEl = document.getElementById("humidity");
 var uviEl = document.getElementById("uvi");
-var searchHistory = document.getElementById("search-history");
+var searchHistory = document.querySelector("#search-history");
 var parentContainer = document.getElementById("parent-container");
 var days = "5";
 
 
 init();
-
+// Returning previous search on refresh
 function init () {
   showCity();
 };
@@ -37,6 +38,7 @@ function createDate(time) {
   return actualDate
 };
 
+// Saves to local storage
 function saveCity(data) {
   event.preventDefault;
   var storedResults = JSON.parse(localStorage.getItem('prevCity'));
@@ -51,6 +53,7 @@ function saveCity(data) {
   addResult(data);
 };
 
+// Makes all the previous search city buttons
 function showCity(data) {
   var storedResults = JSON.parse(localStorage.getItem('prevCity'));
   if (storedResults != undefined || storedResults != null) {
@@ -62,9 +65,8 @@ function showCity(data) {
 };
 
 // API Call for Current Weather (including lon & lat data)
-function getLocation() {
-  var searchCity = cityName.value
-  console.log(searchCity)
+function getLocation(data) {
+  searchCity = data;
   var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=538ed13f02e5d219c8e772c473392370&units=imperial`
   event.preventDefault()
 
@@ -85,14 +87,12 @@ function getLocation() {
 // OneCall API (utilizing lon & lat)
 function getWeather(lon, lat) {
   var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=538ed13f02e5d219c8e772c473392370&units=imperial`;
-  var searchCity = cityName.value
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) return response.json();
       else console.log(err);
     })
     .then(function (data) {
-      console.log(data)
       var unixTime = data.current.dt;
       createDate(unixTime);
       cityEl.textContent = `City: ${searchCity} ${actualDate}`;
@@ -123,19 +123,21 @@ function getWeather(lon, lat) {
   ;
 };
 
+// Main search event listener
 searchBtn.addEventListener('click', function () {
-  var citySearch = cityName.value;
-  console.log(citySearch)
-  getLocation();
-  saveCity(citySearch);
+  var searchCity = cityName.value;
+  getLocation(searchCity);
+  saveCity(searchCity);
 });
 
+// Previous searches event listener
 function researchBtn() {
   searchHistory.addEventListener('click', function (event) {
     getLocation(event.target.value);
   });
 };
 
+// Making the button for when searching for a city
 function addResult(city) {
   searchHistory.innerHTML += `<button class="btn btn-primary m-1 prevResult" id='prevBtn' type="submit" value="${city}">${city}</button>`
 };
