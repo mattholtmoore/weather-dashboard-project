@@ -1,18 +1,39 @@
-var searchForm = document.querySelector('#search-form');
-var formEl = document.querySelector('.form');
-var formInput = document.querySelector('.form-input');
 var searchBtn = document.getElementById('search-button');
+var cityName = document.getElementById('city-name');
+var cityEl = document.getElementById('city');
+var temperatureEl = document.getElementById("temperature");
+var windSpeedEl = document.getElementById("wind-speed");
+var humidityEl = document.getElementById("humidity");
+var uviEl = document.getElementById("uvi");
+var searchHistory = document.getElementById("search-history");
+var parentContainer = document.getElementById("parent-container");
+var days = "5";
 
-var temperature = document.getElementById("temperature");
-var windSpeed = document.getElementById("windSpeed");
-var humidity = document.getElementById("humidity");
-var uvi = document.getElementById("uvi");
 
-var searchCity = formInput.value.trim()
+// Creating the 5-Day Forecast
+function makeContainer(day, temp, humidity, wind, uv) {
+  return `<div class="card" style="width: 18rem;">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Day: ${day}</li>
+    <li class="list-group-item">Temperature: ${temp}</li>
+    <li class="list-group-item">Humidity: ${humidity}</li>
+    <li class="list-group-item">Wind Speed: ${wind}</li>
+    <li class="list-group-item">UV Index: ${uv}</li>
+  </ul>
+</div>`
+};
+
+// Getting current date
+function createDate(time) {
+  var milliseconds = time * 1000
+  var dataObject = new Date(milliseconds)
+  actualDate = dataObject.toLocaleString()
+  return actualDate
+};
 
 // API Call for Current Weather (including lon & lat data)
 function getLocation() {
-  var searchCity = formInput.value
+  var searchCity = cityName.value
   console.log(searchCity)
   var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=538ed13f02e5d219c8e772c473392370&units=imperial`
   event.preventDefault()
@@ -23,11 +44,7 @@ function getLocation() {
       else console.log(error);
     })
     .then(function (data) {
-      console.log(data)
-
-      searchForm = data.name
       getWeather(data.coord.lon, data.coord.lat)
-      // formInput.value = "";
     })
     .catch(function (error) {
       console.log(error)
@@ -38,109 +55,32 @@ function getLocation() {
 // OneCall API (utilizing lon & lat)
 function getWeather(lon, lat) {
   var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=538ed13f02e5d219c8e772c473392370&units=imperial`;
-  var searchCity = formInput.value
+  var searchCity = cityName.value
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) return response.json();
       else console.log(error);
     })
     .then(function (data) {
-      getForecast(data, searchCity);
       console.log(data)
-      var h1EL = document.createElement("h1") 
-      h1EL.textContent = searchCity
-      var todaySection = document.querySelector('#today')
-      todaySection.append(h1EL)
+      var unixTime = data.current.dt;
+      createDate(unixTime);
+      cityEl.textContent = `City: ${searchCity} ${actualDate}`;
+      temperatureEl.textContent = `Temperature: ${data.daily[0].temp.day}°F`
+      windSpeedEl.textContent = `Wind Speed: ${data.daily[0].wind_speed}mph`
+      humidityEl.textContent = `Humidity: ${data.daily[0].humidity}`
+      uviEl.textContent = `UV Index: ${data.daily[0].uvi}`
 
-      var tempEl = document.createElement("p")  
-      tempEl.textContent = (`Temp: ${data.current.temp}°F`);
-      console.log(tempEl);   
-      h1EL.append(tempEl);
-
-      var windEl = document.createElement("p")  
-      windEl.textContent = (`Wind Speed: ${data.current.wind_speed}mph`);
-      console.log(windEl);   
-      tempEl.append(windEl);
-
-      var humEl = document.createElement("p")  
-      humEl.textContent = (`Humidity: ${data.current.humidity}%`);
-      console.log(humEl);   
-      windEl.append(humEl);
-
-      var uvIndexEl = document.createElement("p")  
-      uvIndexEl.textContent = (`UVI: ${data.current.uvi}`);
-      console.log(uvIndexEl);   
-      humEl.append(uvIndexEl);
-
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  ;
-}
-
-function getForecast() {
-  var searchCity = formInput.value
-  console.log(searchCity)
-  var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&units=imperial&appid=538ed13f02e5d219c8e772c473392370`;
-  console.log(apiUrl)
-
-  fetch(apiUrl)
-    .then(function (response) {
-      if (response.ok) return response.json();
-      else console.log(error);
-    })
-    .then(function (data) {
-      for (var i = 0; i < data.length; i++) {
-        
+      var html = "";
+      for (let i = 1; i <= days; i++) {
+        html += makeContainer(i, Math.floor(data.daily[i].temp.day), data.daily[i].humidity, data.daily[i].wind_speed, data.daily[i].uvi)
       }
-      // create and append into second section same as above
-
-      console.log(data)
-      // showForecast(data);
+      parentContainer.innerHTML = html;
     })
     .catch(function (error) {
       console.log(error);
     });
   ;
-}
-
-function displayWeather(data) {
-  var temp = document.createElement('p')
-  temperature.innerHTML = "";
-  temp.textContent = `${data.main.temp}`
-  temperature.appendChild(temp)
-
-  var wind = document.createElement('p')
-  windSpeed.innerHTML = "";
-  wind.textContent = `${data.wind.speed}`
-  windSpeed.appendChild(wind)
-
-  var hum = document.createElement('p')
-  humidity.innerHTML = "";
-  wind.textContent = `${data.main.humidity}`
-  humidity.appendChild(hum)
+};
   
-  var uvi = document.createElement('p')
-  uvIndexEl.innerHTML = "";
-  uvi.textContent = `${data.current.uvi}`
-  uvIndexEl.appendChild(uvi)
-
-}
-  
-
-
-
-// function displayImg (data) {
-//   var createImage = document.createElement('img')
-//   createImage.src = data.data[0].images.original.url;
-//   results.appendChild(createImage)
-
-// }
-
 searchBtn.addEventListener('click', getLocation);
-
-
-
-
-

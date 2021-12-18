@@ -37,41 +37,40 @@
   </header>
 
   <main class="container-fluid bg-light text-dark vh-100">
-
     <!-- Search Input and Search Button -->
     <section class="row align-items-center pb-3">
-      <aside class="col">
-        <h3 class="city-name p-3">Search For A City:</h3>
-        <form id="search-form" class="col-12 text-center form flex-column">
-          <div class="input-group">
-            <input id="search-input" class="form-input font-awesome" type="text" placeholder="Search For A City"/>
-            <div class="input-group-append">
-              <button id="search-button" class="btn searchBtn btn-primary text-centered mt-3" type="submit">Search</button>         
+      <section class="container pt-3  mb-5 cityInfo">
+        <div class="container cityInfo">
+          <div class="row align-items-start">
+            <div class="col">
+              <div class="input-group flex-nowrap col">
+                <input type="text" class="form-control" id="city-name"
+                  placeholder="Enter City Name" aria-label="Username"
+                  aria-describedby="addon-wrapping">
+                <input class="btn btn-primary" id="search-button" type="submit" value="Submit">
+              </div>
+              <div class="p-3" id="search-history"></div>
+            </div>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <div class="card-header" id="city">City:</div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item bg-light" id="temperature">Temperature:</li>
+                  <li class="list-group-item bg-light" id="wind-speed">Wind Speed:</li>
+                  <li class="list-group-item bg-light" id="humidity">Humidity:</li>
+                  <li class="list-group-item bg-light" id="uvi">UV Index:</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </form>
-
-        <!-- Search History -->
-        <ul class="search-history" id="searchHistory"></ul>
-      </aside>
-
-        <!-- Five Day Forecast -->
-      <div class="col-lg-9 pb-3">
-        <section id="today" class='card mt-3'></section>
-        <section id="five-day-forecast" class='card text-centered mt-3'></section>
-      </div>
-
-    </section>
-    <section class="text-center">
-      <div class="justify-content-around">
-        <div>
-          <p id="temperature"></p>
-          <p id="windSpeed"></p>
-          <p id="humidity"></p>
-          <p id="uvi"></p>        
         </div>
-      </div>
+      </section>
+
+      <!-- Five Day Forecast -->
+      <div id="parent-container"></div>
+
     </section>
+    
   </main>
 
   <!-- Attached JavaScript file -->
